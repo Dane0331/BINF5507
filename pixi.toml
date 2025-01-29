@@ -1,0 +1,18 @@
+[project]
+authors = ["Dane0331 <96467340+Dane0331@users.noreply.github.com>"]
+channels = ["conda-forge"]
+description = "Add a short description here"
+name = "BINF5507"
+platforms = ["win-64"]
+version = "0.1.0"
+
+[tasks]
+
+[dependencies]
+pandas = ">=2.2.3,<3"
+numpy = ">=2.0.2,<3"
+scikit-learn = ">=1.6.1,<2"
+scipy = ">=1.13.1,<2"
+ipykernel = ">=6.29.5,<7"
+matplotlib = ">=3.9.4,<4"
+seaborn = ">=0.13.2,<0.14"

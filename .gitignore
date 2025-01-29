@@ -1,0 +1,12 @@
+
+# pixi environments
+.pixi
+*.egg-info
+test.py
+__pycache__/functionals.cpython-39.pyc
+__pycache__/functionals.cpython-39.pyc
+.idea/BINF5507.iml
+.idea/misc.xml
+.idea/modules.xml
+.idea/workspace.xml
+.idea/inspectionProfiles/profiles_settings.xml

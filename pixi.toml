@@ -1,5 +1,5 @@
 [project]
-authors = ["Dane0331 <96467340+Dane0331@users.noreply.github.com>"]
+authors = ["Daniel0331 <96467340+Dane0331@users.noreply.github.com>"]
 channels = ["conda-forge"]
 description = "Add a short description here"
 name = "BINF5507"
@@ -16,3 +16,4 @@ scipy = ">=1.13.1,<2"
 ipykernel = ">=6.29.5,<7"
 matplotlib = ">=3.9.4,<4"
 seaborn = ">=0.13.2,<0.14"
+python = ">=3.9.21,<3.10"

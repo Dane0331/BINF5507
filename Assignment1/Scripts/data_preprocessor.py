@@ -12,10 +12,35 @@ def impute_missing_values(data, strategy='mean'):
     Fill missing values in the dataset.
     :param data: pandas DataFrame
     :param strategy: str, imputation method ('mean', 'median', 'mode')
-    :return: pandas DataFrame
+    :return: pandas DataFrame with missing values filled
     """
-    # TODO: Fill missing values based on the specified strategy
-    pass
+    df = data.copy()
+    # Identify numeric and non-numeric columns
+    numeric_cols = df.select_dtypes(include=[np.number]).columns
+    non_numeric_cols = df.select_dtypes(exclude=[np.number]).columns
+
+    if strategy in ['mean', 'median']:
+        # Build a dictionary for numeric columns based on the chosen strategy
+        fill_values = {
+            col: (df[col].mean() if strategy == 'mean' else df[col].median())
+            for col in numeric_cols
+        }
+        # For non-numeric columns, fill with the mode
+        df.fillna(value=fill_values, inplace=True)
+
+    elif strategy == 'mode':
+        # Use the mode for all columns
+        fill_values = {col: df[col].mode()[0] for col in df.columns}
+        df.fillna(value=fill_values, inplace=True)
+
+    else:
+        raise ValueError("Unsupported strategy. Use 'mean', 'median', or 'mode'.")
+
+    for col in non_numeric_cols:
+        df[col].fillna(df[col].mode()[0], inplace=True)
+    
+    return df
+
 
 # 2. Remove Duplicates
 def remove_duplicates(data):
@@ -24,8 +49,11 @@ def remove_duplicates(data):
     :param data: pandas DataFrame
     :return: pandas DataFrame
     """
-    # TODO: Remove duplicate rows
-    pass
+    # Remove duplicate rows
+    df = data.copy()
+    df.drop_duplicates(inplace=True)
+    return df
+
 
 # 3. Normalize Numerical Data
 def normalize_data(data,method='minmax'):
@@ -33,8 +61,19 @@ def normalize_data(data,method='minmax'):
     :param data: pandas DataFrame
     :param method: str, normalization method ('minmax' (default) or 'standard')
     """
-    # TODO: Normalize numerical data using Min-Max or Standard scaling
-    pass
+    # Normalize numerical data using Min-Max or Standard scaling
+    df = data.copy()
+    numeric_cols = df.select_dtypes(include=[np.number]).columns
+    
+    if method == 'minmax':
+        scaler = MinMaxScaler()
+    elif method == 'standard':
+        scaler = StandardScaler()
+    else:
+        raise ValueError("Normalization method not in function. Use 'minmax' or 'standard' instead.")
+
+    df[numeric_cols] = scaler.fit_transform(df[numeric_cols])
+    return df
 
 # 4. Remove Redundant Features   
 def remove_redundant_features(data, threshold=0.9):
@@ -43,9 +82,18 @@ def remove_redundant_features(data, threshold=0.9):
     :param threshold: float, correlation threshold
     :return: pandas DataFrame
     """
-    # TODO: Remove redundant features based on the correlation threshold (HINT: you can use the corr() method)
-    pass
+    # Remove redundant features based on the correlation threshold (HINT: you can use the corr() method)
+    df = data.copy()
+    # Numeric cols only for computing correlation
+    numeric_cols = df.select_dtypes(include=[np.number]).columns
+    corr_matrix = df[numeric_cols].corr().abs()
+    
+    upper_tri = corr_matrix.where(np.triu(np.ones(corr_matrix.shape), k=1).astype(bool))
 
+    to_drop = [col for col in upper_tri.columns if any(upper_tri[col] > threshold)]
+    df.drop(columns=to_drop, inplace=True)
+    return df
+    
 # ---------------------------------------------------
 
 def simple_model(input_data, split_data=True, scale_data=False, print_report=False):
@@ -70,41 +118,83 @@ def simple_model(input_data, split_data=True, scale_data=False, print_report=Fal
     9. Prints the accuracy and classification report (if print_report is True).
     """
 
-    # if there's any missing data, remove the columns
-    input_data.dropna(inplace=True)
+    # df = input_data.copy()
+    # # if there's any missing data, remove the columns
+    # input_data.dropna(axis=1, inplace=True)
 
-    # split the data into features and target
-    target = input_data.copy()[input_data.columns[0]]
-    features = input_data.copy()[input_data.columns[1:]]
+    # # split the data into features and target
+    # target = input_data.copy()[input_data.columns[0]]
+    # features = input_data.copy()[input_data.columns[1:]]
 
-    # if the column is not numeric, encode it (one-hot)
-    for col in features.columns:
-        if features[col].dtype == 'object':
-            features = pd.concat([features, pd.get_dummies(features[col], prefix=col)], axis=1)
-            features.drop(col, axis=1, inplace=True)
+    # # if the column is not numeric, encode it (one-hot)
+    # for col in features.columns:
+    #     if features[col].dtype == 'object':
+    #         features = pd.concat([features, pd.get_dummies(features[col], prefix=col)], axis=1)
+    #         features.drop(col, axis=1, inplace=True)
 
+    # X_train, X_test, y_train, y_test = train_test_split(features, target, test_size=0.2, stratify=target, random_state=42)
+
+    # if scale_data:
+    #     # scale the data
+    #     X_train = normalize_data(X_train, method='standard')
+    #     X_test = normalize_data(X_test, method='standard')
+        
+    # # instantiate and fit the model
+    # log_reg = LogisticRegression(random_state=42, max_iter=100, solver='liblinear', penalty='l2', C=1.0)
+    # log_reg.fit(X_train, y_train)
+
+    # # make predictions and evaluate the model
+    # y_pred = log_reg.predict(X_test)
+    # accuracy = accuracy_score(y_test, y_pred)
+    # report = classification_report(y_test, y_pred)
+
+    # print(f'Accuracy: {accuracy:.4f}')
+    
+    # # if specified, print the classification report
+    # if print_report:
+    #     print('Classification Report:')
+    #     print(report)
+    #     print('Read more about the classification report: https://scikit-learn.org/stable/modules/generated/sklearn.metrics.classification_report.html and https://www.nb-data.com/p/breaking-down-the-classification')
+    
+    df = input_data.copy()
+
+    # Ensure Target Variable is Binary
+    target = df.iloc[:, 0]
+    target = target.astype(int) 
+    
+    if target.nunique() > 2:
+        raise ValueError("Target column has more than 2 unique values. Logistic regression requires a binary classification target.")
+
+    # 1. Convert Categorical Variables to One-Hot Encoding
+    categorical_cols = df.select_dtypes(include=['object', 'bool']).columns
+    df = pd.get_dummies(df, columns=categorical_cols, drop_first=True)
+
+    # 2. Separate Features and Target
+    features = df.iloc[:, 1:]
+
+    # 3. Train-Test Split
     X_train, X_test, y_train, y_test = train_test_split(features, target, test_size=0.2, stratify=target, random_state=42)
 
+    # 4. Normalize Data (if requested)
     if scale_data:
-        # scale the data
-        X_train = normalize_data(X_train)
-        X_test = normalize_data(X_test)
-        
-    # instantiate and fit the model
-    log_reg = LogisticRegression(random_state=42, max_iter=100, solver='liblinear', penalty='l2', C=1.0)
-    log_reg.fit(X_train, y_train)
+        scaler = StandardScaler()
+        X_train = scaler.fit_transform(X_train)
+        X_test = scaler.transform(X_test)
 
-    # make predictions and evaluate the model
-    y_pred = log_reg.predict(X_test)
+    # 5. Train Logistic Regression Model
+    model = LogisticRegression(max_iter=1000, solver='liblinear')
+    model.fit(X_train, y_train)
+
+    # 6. Make Predictions and Evaluate Model
+    y_pred = model.predict(X_test)
     accuracy = accuracy_score(y_test, y_pred)
     report = classification_report(y_test, y_pred)
+    print(f'Accuracy: {accuracy:.4f}')
 
-    print(f'Accuracy: {accuracy}')
-    
-    # if specified, print the classification report
     if print_report:
         print('Classification Report:')
         print(report)
         print('Read more about the classification report: https://scikit-learn.org/stable/modules/generated/sklearn.metrics.classification_report.html and https://www.nb-data.com/p/breaking-down-the-classification')
     
-    return None
+
+    return model

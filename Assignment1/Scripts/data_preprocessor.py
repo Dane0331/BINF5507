@@ -118,46 +118,10 @@ def simple_model(input_data, split_data=True, scale_data=False, print_report=Fal
     9. Prints the accuracy and classification report (if print_report is True).
     """
 
-    # df = input_data.copy()
-    # # if there's any missing data, remove the columns
-    # input_data.dropna(axis=1, inplace=True)
-
-    # # split the data into features and target
-    # target = input_data.copy()[input_data.columns[0]]
-    # features = input_data.copy()[input_data.columns[1:]]
-
-    # # if the column is not numeric, encode it (one-hot)
-    # for col in features.columns:
-    #     if features[col].dtype == 'object':
-    #         features = pd.concat([features, pd.get_dummies(features[col], prefix=col)], axis=1)
-    #         features.drop(col, axis=1, inplace=True)
-
-    # X_train, X_test, y_train, y_test = train_test_split(features, target, test_size=0.2, stratify=target, random_state=42)
-
-    # if scale_data:
-    #     # scale the data
-    #     X_train = normalize_data(X_train, method='standard')
-    #     X_test = normalize_data(X_test, method='standard')
-        
-    # # instantiate and fit the model
-    # log_reg = LogisticRegression(random_state=42, max_iter=100, solver='liblinear', penalty='l2', C=1.0)
-    # log_reg.fit(X_train, y_train)
-
-    # # make predictions and evaluate the model
-    # y_pred = log_reg.predict(X_test)
-    # accuracy = accuracy_score(y_test, y_pred)
-    # report = classification_report(y_test, y_pred)
-
-    # print(f'Accuracy: {accuracy:.4f}')
-    
-    # # if specified, print the classification report
-    # if print_report:
-    #     print('Classification Report:')
-    #     print(report)
-    #     print('Read more about the classification report: https://scikit-learn.org/stable/modules/generated/sklearn.metrics.classification_report.html and https://www.nb-data.com/p/breaking-down-the-classification')
-    
     df = input_data.copy()
-
+    # if there's any missing data, remove the columns
+    input_data.dropna(axis=1, inplace=True)
+    
     # Ensure Target Variable is Binary
     target = df.iloc[:, 0]
     target = target.astype(int) 
@@ -165,27 +129,27 @@ def simple_model(input_data, split_data=True, scale_data=False, print_report=Fal
     if target.nunique() > 2:
         raise ValueError("Target column has more than 2 unique values. Logistic regression requires a binary classification target.")
 
-    # 1. Convert Categorical Variables to One-Hot Encoding
+    # Convert Categorical Variables to One-Hot Encoding
     categorical_cols = df.select_dtypes(include=['object', 'bool']).columns
     df = pd.get_dummies(df, columns=categorical_cols, drop_first=True)
 
-    # 2. Separate Features and Target
+    # Separate Features and Target
     features = df.iloc[:, 1:]
 
-    # 3. Train-Test Split
+    # Train-Test Split
     X_train, X_test, y_train, y_test = train_test_split(features, target, test_size=0.2, stratify=target, random_state=42)
 
-    # 4. Normalize Data (if requested)
+    # Normalize Data (if requested)
     if scale_data:
         scaler = StandardScaler()
         X_train = scaler.fit_transform(X_train)
         X_test = scaler.transform(X_test)
 
-    # 5. Train Logistic Regression Model
-    model = LogisticRegression(max_iter=1000, solver='liblinear')
+    # Train Logistic Regression Model
+    model = LogisticRegression(random_state=42, max_iter=100, solver='liblinear', penalty='l2', C=1.0)
     model.fit(X_train, y_train)
 
-    # 6. Make Predictions and Evaluate Model
+    # Make Predictions and Evaluate Model
     y_pred = model.predict(X_test)
     accuracy = accuracy_score(y_test, y_pred)
     report = classification_report(y_test, y_pred)

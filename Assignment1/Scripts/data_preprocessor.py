@@ -20,9 +20,9 @@ def impute_missing_values(data, strategy='mean'):
     non_numeric_cols = df.select_dtypes(exclude=[np.number]).columns
 
     if strategy in ['mean', 'median']:
-        # Build a dictionary for numeric columns based on the chosen strategy
+        # Dictionary for numeric columns based on the chosen strategy
         fill_values = {
-            col: (df[col].mean() if strategy == 'mean' else df[col].median())
+            col: (df[col].mean() if strategy == 'mean' else df[col].median()) # Will swap to median if mean not detected
             for col in numeric_cols
         }
         # For non-numeric columns, fill with the mode
@@ -84,8 +84,8 @@ def remove_redundant_features(data, threshold=0.9):
     """
     # Remove redundant features based on the correlation threshold (HINT: you can use the corr() method)
     df = data.copy()
-    # Numeric cols only for computing correlation
-    numeric_cols = df.select_dtypes(include=[np.number]).columns
+    
+    numeric_cols = df.select_dtypes(include=[np.number]).columns # Numeric cols only for computing correlation
     corr_matrix = df[numeric_cols].corr().abs()
     
     upper_tri = corr_matrix.where(np.triu(np.ones(corr_matrix.shape), k=1).astype(bool))

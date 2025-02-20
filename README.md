@@ -37,7 +37,7 @@ This project applies both regression and classification techniques on a heart di
 
 - Preprocessing the dataset using a pipeline that handles imputation, scaling, and encoding.
 - Splitting the data into training and test sets, with a focus on preventing data leakage.
-- Tuning hyperparameters for ElasticNet, including exploring a range of alpha values and L1 ratios, and visualizing model performance through heatmaps of R² and RMSE.
+- Tuning hyperparameters for a linear regression model with ElasticNet, including exploring a range of alpha values and L1 ratios, and visualizing model performance through heatmaps of R² and RMSE.
 - Evaluating classification performance by using GridSearchCV for logistic regression and k-NN, and comparing metrics such as accuracy, F1 Score, AUROC, and AUPRC.
 - Plotting ROC and Precision-Recall curves with AUC/AUPRC annotations to compare model performance.
 

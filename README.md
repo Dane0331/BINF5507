@@ -29,6 +29,7 @@ The first cell will allow you to import the necessary modules, load the dataset,
 
 The second cell will allow you to check the summary statistics of the cleaned vs messy datasets, as well as the removed rows and features.
 
+
 ## Assignment 2: Regression and Classification on Heart Disease Data
 
 ### Project Overview
@@ -54,6 +55,34 @@ A pixi.toml file is also provided for use with package management using Pixi by 
 To run the code, navigate to the corresponding project folder (e.g., BINF5507/Assignment2/Scripts) and open the Jupyter notebook that contains the main pipeline. The notebook is organized into sections for data loading, preprocessing (with an object-oriented pipeline), model training, hyperparameter tuning, and visualization of evaluation metrics.
 
 The code begins by loading the heart disease dataset, checking for missing values, and then applying a preprocessing pipeline that imputes missing values, scales numeric features, and encodes categorical features. The project then splits the data into training and test sets, trains a linear regression model to predict cholesterol levels, and visualizes the effect of different hyperparameters using heatmaps. Moreover, classification models (Logistic Regression and K-NN classifiers) are then tuned and evaluated using GridSearchCV, with ROC and Precision-Recall curves generated to assess performance of said models.
+
+
+## Assignment 3: Comparison of Clustering Algorithms on Synthetic Datasets
+Project Overview
+This project explores and compares the performance of three popular clustering algorithms (DBSCAN, K-Means, and Hierarchical/Agglomerative clustering) on synthetic datasets with different geometric properties. The analysis highlights each algorithm's strengths and weaknesses in handling various data distributions:
+
+Evaluating clustering performance on non-linearly separable data (moons and circles datasets)
+Comparing algorithm effectiveness on standard Gaussian clusters (blobs dataset)
+Demonstrating how parameter tuning affects clustering results for each algorithm
+Visualizing clustering boundaries and comparing algorithm performance across different data geometries
+Exploring DBSCAN's ability to handle noise and arbitrary cluster shapes compared to centroid-based methods
+
+### How to Run the Project
+This project uses the following Python packages:
+
+- numpy = ">=2.0.2,<3"
+- matplotlib = ">=3.9.3,<4"
+- scikit-learn = ">=1.6.1,<2" (for datasets, clustering algorithms)
+
+To run the code, navigate to the BINF5507/Assignment3/Scripts directory and execute the Python script. The code will:
+
+- Generate three synthetic datasets (moons, blobs, and concentric circles)
+- Apply each clustering algorithm with appropriate parameters for each dataset
+- Create and save visualization plots showing the clustering results
+- Output the plots to a "Result Plots" directory
+
+The analysis demonstrates why certain algorithms perform better on specific data distributions, with DBSCAN excelling on non-linearly separable clusters (moons, circles) while K-Means and Hierarchical clustering perform better on Gaussian blobs.
+
 
 ## Assignment 4: Survival Analysis for Cancer Staging and Smoking Status
 Project Overview

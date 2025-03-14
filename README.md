@@ -67,7 +67,7 @@ This project implements and compares three major survival analysis techniques to
 - Visualization of survival curves across different stages and smoking status groups
 - Identification of key prognostic factors including age, cancer stage, and smoking status
 
-###How to Run the Project
+### How to Run the Project
 This project utilizes the following Python packages:
 
 - pandas = ">=2.2.3,<3"

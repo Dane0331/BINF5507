@@ -54,3 +54,37 @@ A pixi.toml file is also provided for use with package management using Pixi by 
 To run the code, navigate to the corresponding project folder (e.g., BINF5507/Assignment2/Scripts) and open the Jupyter notebook that contains the main pipeline. The notebook is organized into sections for data loading, preprocessing (with an object-oriented pipeline), model training, hyperparameter tuning, and visualization of evaluation metrics.
 
 The code begins by loading the heart disease dataset, checking for missing values, and then applying a preprocessing pipeline that imputes missing values, scales numeric features, and encodes categorical features. The project then splits the data into training and test sets, trains a linear regression model to predict cholesterol levels, and visualizes the effect of different hyperparameters using heatmaps. Moreover, classification models (Logistic Regression and K-NN classifiers) are then tuned and evaluated using GridSearchCV, with ROC and Precision-Recall curves generated to assess performance of said models.
+
+## Assignment 4: Survival Analysis for Cancer Staging and Smoking Status
+Project Overview
+This project implements and compares three major survival analysis techniques to analyze cancer patient data with a focus on cancer staging and smoking status. The analysis includes:
+
+- Kaplan-Meier survival estimation with statistical comparisons using log-rank tests
+- Cox Proportional Hazards regression to quantify risk factors through hazard ratios
+- Random Survival Forests to capture complex non-linear relationships in survival data
+- Specialized handling of Stage IV cancer subtypes through creation of a combined stage group
+- Evaluation of model performance using concordance indices
+- Visualization of survival curves across different stages and smoking status groups
+- Identification of key prognostic factors including age, cancer stage, and smoking status
+
+###How to Run the Project
+This project utilizes the following Python packages:
+
+- pandas = ">=2.2.3,<3"
+- numpy = ">=2.0.2,<3"
+- matplotlib = ">=3.9.3,<4"
+- seaborn = ">=0.13.2,<0.14"
+- lifelines = ">=0.30.0,<0.31" (for Kaplan-Meier and Cox regression)
+- scikit-survival = ">=0.23.0,<0.24" (for Random Survival Forests)
+- re (for pattern matching in stage grouping)
+
+To run the code, navigate to the BINF5507/Assignment4/Scripts directory and open the jupyter notebook. The analysis workflow is organized into several key components:
+
+- Data loading and exploration of cancer stage distribution
+- Kaplan-Meier analysis for comparing survival across different groups
+- Cox Proportional Hazards regression for multivariable analysis
+- Random Survival Forests implementation with feature importance analysis
+- Creation of specialized visualizations for comparing stages and smoking status
+- Model comparison through concordance indices
+
+The notebook also addresses challenges with Stage IV cancer subtypes by creating a combined group that includes all Stage IV variants, allowing for more robust analysis despite the small sample size of the main Stage IV category.
